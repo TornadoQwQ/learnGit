@@ -20,10 +20,22 @@ Initialized empty Git repository in F:/Projects/BLOG_Hexo/git_and _github/.git/
 ```
 
 第三步，添加文件到版本库：
-```
-$ git add learn_test.md
-$ git commit -m "wrote a summary file"
-[master (root-commit) ec748fd] wrote a summary file
- 1 file changed, 8 insertions(+)
+
+```git
+$ git add learn_test.md #文件添加到仓库
+$ git commit -m "wrote a summary file" #文件提交到仓库
+[master (root-commit) ec748fd] wrote a summary file #反馈提交说明
+ 1 file changed, 8 insertions(+) #1个文件被改动，插入了8行内容
  create mode 100644 learn_test.md
 ```
+
+注意可以先`add`多个文件之后再一次性`commit`：
+
+```git
+git add file1.txt
+git add file2.txt file3.txt
+git commit -m "add 3 files."
+```
+
+## 版本回退
+
