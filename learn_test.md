@@ -172,3 +172,127 @@ nothing to commit, working tree clean
 第一次修改 -> `git add` -> 第二次修改 -> `git commit`
 此时查看`git status`可知第二次修改没有被放入暂存区，从而也没有被提交；使用`git diff HEAD -- 文件名`可查看工作区和版本库最新版本的差别：
 
+```git
+$ git add learn_test.md
+$ git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   learn_test.md
+```
+
+`CTRL+S`保存文件，再`git commit`：
+
+```git
+$ git commit -m "git tracks changes"
+[master b9827f0] git tracks changes
+ 1 file changed, 47 insertions(+), 1 deletion(-)
+
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   learn_test.md
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+$ git diff HEAD -- learn_test.md
+diff --git a/learn_test.md b/learn_test.md
+index bcc2168..2f6cc1e 100644
+--- a/learn_test.md
++++ b/learn_test.md
+@@ -172,3 +172,13 @@ nothing to commit, working tree clean
+ 第一次修改 -> `git add` -> 第二次修改 -> `git commit`
+ 此时查看`git status`可知第二次修改没有被放入暂存区，从而也没有被提交；使用`git diff HEAD -- 文件名`可查看工作区和版本库最新版本的差别：
+
++```git
++$ git add learn_test.md
++$ git status
++On branch master
++Changes to be committed:
++  (use "git restore --staged <file>..." to unstage)
++        modified:   learn_test.md
++```
++
++`CTRL+S`保存文件，再`git commit`：
+```
+
+所以正常路线应该是：
+第一次修改 -> `git add` -> 第二次修改 -> `git add` -> `git commit`
+
+## 撤销修改
+
+场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令`git checkout -- file`：
+
+第一种情况是修改后还未`git add`到暂存区，撤销修改就回到和版本库一模一样的状态：
+
+```git
+$ git diff HEAD -- test_LICENSE
+diff --git a/test_LICENSE b/test_LICENSE
+index 30d74d2..6b4a262 100644
+--- a/test_LICENSE
++++ b/test_LICENSE
+@@ -1 +1,3 @@
+-test
+\ No newline at end of file
++test
++
++WOSHI SB
+\ No newline at end of file
+
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   learn_test.md
+        modified:   test_LICENSE
+
+$ git checkout -- test_LICENSE
+$ cat test_LICENSE
+test
+```
+
+第二种情况是已经`git add`到暂存区后，又作了修改，现在，撤销修改就回到添加到暂存区后的状态。
+
+总之，就是让这个文件回到最近一次`git commit`或`git add`时的状态。
+
+场景2：当你不但改乱了工作区某个文件的内容，还添加到了暂存区时，想丢弃修改，分两步，第一步用命令`git reset HEAD <file>`，就回到了场景1，第二步按场景1操作。
+
+场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退，不过前提是没有推送到远程库。
+
+## 删除文件
+
+命令`git rm`用于删除一个文件。如果一个文件已经被提交到版本库，那么你永远不用担心误删，但是要小心，你只能恢复文件到最新版本，你会丢失最近一次提交后你修改的内容。
+
+```git
+$ rm test_LICENSE
+$ git status
+On branch master
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   learn_test.md
+        deleted:    test_LICENSE
+
+no changes added to commit (use "git add" and/or "git commit -a")
+
+$ git checkout -- test_LICENSE
+```
+
+误删可用`git checkout -- <file>`还原版本库/暂存区内的被误删文件。如想完全删除，使用`git rm`之后再`git commit`：
+
+```git
+$ rm test_LICENSE
+$ git rm test_LICENSE
+rm 'test_LICENSE'
+$ git commit -m "remove test_LICENSE"
+[master ca374b4] remove test_LICENSE
+ 1 file changed, 1 deletion(-)
+ delete mode 100644 test_LICENSE
+
+#这个命令虽然还原了文件，但是也让本md文件回滚到了之前的版本
+$ git reset --hard HEAD^
+HEAD is now at b9827f0 git tracks changes
+```
