@@ -11,6 +11,14 @@ git config --global user.email "2439947074@qq.com"
 
 ## 创建版本库repository
 
+```git
+mkdir <directory>
+cd <directory>
+git init
+git add <file>
+git commit -m "notes"
+```
+
 第一步，创建目录（windows下尽量英文），进入目录。
 第二步，通过`git init`命令把这个目录变成Git可以管理的仓库：
 
@@ -38,6 +46,14 @@ git commit -m "add 3 files."
 ```
 
 ## 版本回退
+
+```git
+git log --pretty=oneline
+git reset --hard HEAD^
+
+git reflog
+git reset --hard <commit id>
+```
 
 用`git log`查看提交记录，查看由最近一次提交到最早一次提交：
 
@@ -170,7 +186,7 @@ nothing to commit, working tree clean
 ## 管理修改
 
 第一次修改 -> `git add` -> 第二次修改 -> `git commit`
-此时查看`git status`可知第二次修改没有被放入暂存区，从而也没有被提交；使用`git diff HEAD -- 文件名`可查看工作区和版本库最新版本的差别：
+此时查看`git status`可知第二次修改没有被放入暂存区，从而也没有被提交；使用`git diff HEAD -- <file>`可查看工作区和版本库最新版本的差别：
 
 ```git
 $ git add learn_test.md
@@ -223,6 +239,15 @@ index bcc2168..2f6cc1e 100644
 
 ## 撤销修改
 
+```git
+git checkout -- <file>
+
+git reset HEAD <file>
+git checkout -- <file>
+
+gir reset --hard HEAD^
+```
+
 场景1：当你改乱了工作区某个文件的内容，想直接丢弃工作区的修改时，用命令`git checkout -- file`：
 
 第一种情况是修改后还未`git add`到暂存区，撤销修改就回到和版本库一模一样的状态：
@@ -263,6 +288,12 @@ test
 场景3：已经提交了不合适的修改到版本库时，想要撤销本次提交，参考版本回退，不过前提是没有推送到远程库。
 
 ## 删除文件
+
+```git
+rm <file>
+git rm <file>
+git commit -m "remove <file>"
+```
 
 命令`git rm`用于删除一个文件。如果一个文件已经被提交到版本库，那么你永远不用担心误删，但是要小心，你只能恢复文件到最新版本，你会丢失最近一次提交后你修改的内容。
 
@@ -306,8 +337,70 @@ git mv learn_test.md README.md
 git commit -m 'change learn_test to README'
 ```
 
+1. 移除暂缓区的文件，在本地区间还是可以使用
+
+    ```git
+    # git rm --cached xxx文件
+    git rm --cached 789.txt
+    git commit -m 'cached 789'
+    ```
+
+    思考：
+    a.如果是一个新add的文件在暂缓区，当我们 cached的时候，需不要再次提交
+    b.如何批量rm文件
+    c.批量rm的时候，如何批量加入暂缓区
+    d. 如何批量取消rm的文件
+
+2. 强行删除文件，如果一个跟踪文件已经被修改，需要强行删除
+
+    ```git
+    # git rm -f xxx文件 (Force 强行)
+    git rm -f demo.txt
+    ```
 
 ## 添加远程仓库
 
+```git
+# 关联远程仓库
+git remote add origin git@server-name:path/repo-name.git
+# 首次推送master分支加-u，origin为默认远程仓库名
+git push -u origin master
+# 之后向远程仓库推送
+git push origin master
+```
+
 本地仓库上传
 登陆GitHub -> “Create a new repo”创建一个新的仓库
+-> 从本地推送一个仓库
+
+```git
+$ git remote add origin git@github.com:TornadoQwQ/learnGit.git
+$ git push -u origin master
+The authenticity of host 'github.com (52.74.223.119)' can't be established.
+RSA key fingerprint is SHA256:nThbg6kXUpJWGl7E1IGOCspRomTxdCARLviKw6E5SY8.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added 'github.com,52.74.223.119' (RSA) to the list of known hosts.
+Enumerating objects: 27, done.
+Counting objects: 100% (27/27), done.
+Delta compression using up to 4 threads
+Compressing objects: 100% (22/22), done.
+Writing objects: 100% (27/27), 5.83 KiB | 459.00 KiB/s, done.
+Total 27 (delta 7), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (7/7), done.
+To github.com:TornadoQwQ/learnGit.git
+ * [new branch]      master -> master
+Branch 'master' set up to track remote branch 'master' from 'origin'.
+```
+
+添加后，远程库的名字就是`origin`，这是Git默认的叫法，也可以改成别的，但是`origin`这个名字一看就知道是远程库。
+把本地库的内容推送到远程，用`git push`命令，实际上是把当前分支`master`推送到远程。
+
+由于远程库是空的，我们第一次推送`master`分支时，加上了`-u`参数，Git不但会把本地的`master`分支内容推送的远程新的`master`分支，还会把本地的`master`分支和远程的`master`分支关联起来，在以后的推送或者拉取时就可以简化命令。
+
+从现在起，只要本地作了提交，就可以通过命令：
+
+```git
+git push origin master
+```
+
+把本地`master`分支的最新修改推送至GitHub。
