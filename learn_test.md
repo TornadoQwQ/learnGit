@@ -75,3 +75,54 @@ ec748fdefc29dee171fcc8696e582e0ad5d59f9b wrote a summary file
 回退到上一个版本：
 首先，Git中`HEAD`表示当前版本，`HEAD^`表示上个版本，上上一个版本就是`HEAD^^`，往上100个版本是`HEAD~100`。
 回退到上个版本使用命令`reset`:
+
+```git
+$ git log --pretty=oneline
+c1c886e9e934a35bef8dac090b293f76102c4895 (HEAD -> master) how to reset
+4c9f19aee9413a7d1589425a58a0cb8ed54810f2 add and commit
+40a9cd0085d90b3d6ccca7e010edc6fd02dca9a1 add and commit
+ec748fdefc29dee171fcc8696e582e0ad5d59f9b wrote a summary file
+
+$ git reset --hard HEAD^
+HEAD is now at 4c9f19a add and commit
+
+$ git log --pretty=oneline
+4c9f19aee9413a7d1589425a58a0cb8ed54810f2 (HEAD -> master) add and commit
+40a9cd0085d90b3d6ccca7e010edc6fd02dca9a1 add and commit
+ec748fdefc29dee171fcc8696e582e0ad5d59f9b wrote a summary file
+```
+
+如何撤销还原？只要知道`commit id`就可撤销：
+
+```git
+$ git reset --hard c1c886
+HEAD is now at c1c886e how to reset
+```
+
+如果关闭了当前窗口，看不到之前的记录，可用`git reflog`查看所有操作的历史记录，从而找到需要的那个版本的`commit id`：
+
+```git
+$ git reset --hard HEAD^
+HEAD is now at 4c9f19a add and commit
+
+$ git reflog
+4c9f19a (HEAD -> master) HEAD@{0}: reset: moving to HEAD^
+c1c886e HEAD@{1}: reset: moving to c1c886
+4c9f19a (HEAD -> master) HEAD@{2}: reset: moving to HEAD^
+c1c886e HEAD@{3}: commit: how to reset
+4c9f19a (HEAD -> master) HEAD@{4}: commit: add and commit
+40a9cd0 HEAD@{5}: commit: add and commit
+ec748fd HEAD@{6}: commit (initial): wrote a summary file
+
+$ git reset --hard c1c886e
+HEAD is now at c1c886e how to reset
+```
+
+## 工作区和暂存区
+
+工作区（Working Directory）：`git_and_github`文件夹。
+版本库（Repository）：`git_and_github/.git`文件夹：stage（或者叫index）暂存区、默认分支`master`、指向`master`的指针`HEAD`。
+
+需要提交的文件修改通过`git add`全部先放到暂存区，然后，一次性通过`git commit`提交暂存区的所有修改。
+
+在工作区修改文件、增加删除文件后可用`git status`查看状态：
