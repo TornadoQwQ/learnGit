@@ -296,3 +296,18 @@ $ git commit -m "remove test_LICENSE"
 $ git reset --hard HEAD^
 HEAD is now at b9827f0 git tracks changes
 ```
+
+## 改文件名字
+
+```git
+#git 修改文件名称、
+#git mv xxx文件 改后文件
+git mv learn_test.md README.md
+git commit -m 'change learn_test to README'
+```
+
+
+## 添加远程仓库
+
+本地仓库上传
+登陆GitHub -> “Create a new repo”创建一个新的仓库
