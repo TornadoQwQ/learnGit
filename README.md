@@ -404,3 +404,11 @@ git push origin master
 ```
 
 把本地`master`分支的最新修改推送至GitHub。
+
+## 从远程库clone
+
+```git
+git clone git@github.com:TornadoQwQ/learnGit.git
+```
+
+GitHub给出的地址不止一个，还可以用`https://github.com/TornadoQwQ/learnGit.git`这样的地址。实际上，Git支持多种协议，默认的`git://`使用`ssh`，但也可以使用`https`等其他协议。
