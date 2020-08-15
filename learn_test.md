@@ -126,3 +126,49 @@ HEAD is now at c1c886e how to reset
 需要提交的文件修改通过`git add`全部先放到暂存区，然后，一次性通过`git commit`提交暂存区的所有修改。
 
 在工作区修改文件、增加删除文件后可用`git status`查看状态：
+
+```git
+$ git status
+On branch master
+Changes not staged for commit:  #工作区中修改后还未提交的
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   learn_test.md
+
+Untracked files:  #工作区中还未被添加过的文件
+  (use "git add <file>..." to include in what will be committed)
+        test_LICENSE
+
+no changes added to commit (use "git add" and/or "git commit -a")
+```
+
+`git add`将两个新文件加入暂存区：
+
+```git
+$ git add learn_test.md
+$ git add test_LICENSE
+$ git status
+On branch master
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)
+        modified:   learn_test.md
+        new file:   test_LICENSE
+```
+
+执行`git commit`就可以一次性把暂存区的所有修改提交到分支，此时若无新的修改`git status`查看工作区就是干净的，暂存区没有内容：
+
+```git
+$ git commit -m "understand how stage works"
+[master 3362403] understand how stage works
+ 2 files changed, 53 insertions(+), 1 deletion(-)
+ create mode 100644 test_LICENSE
+$ git status
+On branch master
+nothing to commit, working tree clean
+```
+
+## 管理修改
+
+第一次修改 -> `git add` -> 第二次修改 -> `git commit`
+此时查看`git status`可知第二次修改没有被放入暂存区，从而也没有被提交；使用`git diff HEAD -- 文件名`可查看工作区和版本库最新版本的差别：
+
