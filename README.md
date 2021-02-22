@@ -358,6 +358,21 @@ git commit -m 'change learn_test to README'
     git rm -f demo.txt
     ```
 
+## 分支管理
+
+```git
+#创建分支
+git branch (branchname)
+#切换分支
+git checkout (branchname)
+#合并分支
+git merge
+#clone分支
+git clone -b wbf git@github.com:TornadoQwQ/learnGit.git
+#提交到远程分支
+git push origin wbf
+```
+
 ## 添加远程仓库
 
 ```git
@@ -409,6 +424,8 @@ git push origin master
 
 ```git
 git clone git@github.com:TornadoQwQ/learnGit.git
+#-b指定分支
+git clone -b wbf git@github.com:TornadoQwQ/learnGit.git
 ```
 
 GitHub给出的地址不止一个，还可以用`https://github.com/TornadoQwQ/learnGit.git`这样的地址。实际上，Git支持多种协议，默认的`git://`使用`ssh`，但也可以使用`https`等其他协议。
